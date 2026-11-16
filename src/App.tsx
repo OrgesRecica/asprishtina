@@ -12,7 +12,7 @@ function Logo() {
   return <div className="brand"><img src="/logo.jpg" alt="Logo e KB AS Prishtina" /><span><b>AS</b> PRISHTINA</span></div>
 }
 
-function Header({ page, navigate }: { page: Page; navigate: (p: Page, path: string) => void }) {
+function Header({ page, navigate, theme, setTheme }: { page: Page; navigate: (p: Page, path: string) => void; theme: 'vendas' | 'mysafir'; setTheme: (theme: 'vendas' | 'mysafir') => void }) {
   const [open, setOpen] = useState(false)
   return <header className="site-header">
     <a href="/" onClick={e => { e.preventDefault(); navigate('home', '/'); setOpen(false) }} aria-label="AS Prishtina — Ballina"><Logo /></a>
@@ -20,7 +20,7 @@ function Header({ page, navigate }: { page: Page; navigate: (p: Page, path: stri
     <nav className={open ? 'open' : ''} aria-label="Navigimi kryesor">
       {nav.map(([id, label, path]) => <a key={id} href={path} className={page === id ? 'active' : ''} onClick={e => {e.preventDefault(); navigate(id, path); setOpen(false)}}>{label}</a>)}
     </nav>
-    <a className="social-link" href={sources.instagram} target="_blank" rel="noreferrer" aria-label="AS Prishtina në Instagram"><Camera aria-hidden="true" /></a>
+    <div className="header-actions"><div className="theme-switch" role="group" aria-label="Pamja e faqes"><button type="button" className={theme === 'vendas' ? 'selected' : ''} aria-pressed={theme === 'vendas'} onClick={() => setTheme('vendas')}>Vendas</button><button type="button" className={theme === 'mysafir' ? 'selected' : ''} aria-pressed={theme === 'mysafir'} onClick={() => setTheme('mysafir')}>Mysafir</button></div><a className="social-link" href={sources.instagram} target="_blank" rel="noreferrer" aria-label="AS Prishtina në Instagram"><Camera aria-hidden="true" /></a></div>
   </header>
 }
 
@@ -95,7 +95,7 @@ function ShotChallenge() {
     <div className="challenge-copy">
       <p className="eyebrow">SFIDA INTERAKTIVE</p>
       <h2>24 sekonda.<br/>Sa pikë mundesh?</h2>
-      <p>Godite butonin kur treguesi kalon në zonën e kuqe. Sa më afër qendrës, aq më e vlefshme gjuajtja.</p>
+      <p>Godite butonin kur treguesi kalon në zonën e bardhë. Sa më afër qendrës, aq më e vlefshme gjuajtja.</p>
       <div className="challenge-stats" aria-label="Rezultati i sfidës">
         <div><span>KOHA</span><strong>{time}</strong></div>
         <div><span>PIKË</span><strong>{score}</strong></div>
@@ -158,9 +158,11 @@ function Matches() {
 
 export function App() {
   const [page,setPage] = useState<Page>(getPage)
+  const [theme,setTheme] = useState<'vendas' | 'mysafir'>(() => window.localStorage.getItem('asprishtina-theme') === 'mysafir' ? 'mysafir' : 'vendas')
+  useEffect(() => { document.documentElement.dataset.theme = theme; window.localStorage.setItem('asprishtina-theme', theme) }, [theme])
   const navigate = (next: Page, path: string) => { window.history.pushState({},'',path); setPage(next); window.scrollTo({top:0,behavior:'smooth'}) }
   useEffect(()=>{ const pop=()=>setPage(getPage()); addEventListener('popstate',pop); return()=>removeEventListener('popstate',pop)},[])
   useEffect(()=>{ document.title = `${nav.find(n=>n[0]===page)?.[1]} — KB AS Prishtina`; const observer=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting&&e.target.classList.add('in-view')),{threshold:.12}); document.querySelectorAll('.reveal').forEach(el=>observer.observe(el)); return()=>observer.disconnect()},[page])
   const content = useMemo(()=> page==='home'?<Home go={navigate}/>:page==='standings'?<Standings/>:page==='roster'?<Roster/>:<Matches/>,[page])
-  return <div className="app"><Header page={page} navigate={navigate}/>{content}<Footer navigate={navigate}/></div>
+  return <div className="app"><Header page={page} navigate={navigate} theme={theme} setTheme={setTheme}/>{content}<Footer navigate={navigate}/></div>
 }
