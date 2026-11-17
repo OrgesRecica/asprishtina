@@ -34,16 +34,16 @@ export const matches: Match[] = [
 ]
 
 export const standings = [
-  { team: 'AS Prishtina', p: 4, w: 4, l: 0, scored: 339, conceded: 278, diff: 61, pts: 8, featured: true },
-  { team: 'Fushë Kosova', p: 3, w: 2, l: 1, scored: 254, conceded: 235, diff: 19, pts: 5 },
-  { team: 'Megasports', p: 3, w: 1, l: 2, scored: 217, conceded: 235, diff: -18, pts: 4 },
-  { team: 'Policia e Kosovës', p: 2, w: 1, l: 1, scored: 143, conceded: 124, diff: 19, pts: 3 },
-  { team: 'Sfera', p: 2, w: 0, l: 2, scored: 134, conceded: 166, diff: -32, pts: 2 },
-  { team: 'Kaçaniku', p: 2, w: 0, l: 2, scored: 119, conceded: 168, diff: -49, pts: 2 },
+  { id: 377693, team: 'AS Prishtina', shortName: 'AS Prishtina', image: '/teams/as-prishtina.png', p: 4, w: 4, l: 0, scored: 339, conceded: 278, diff: 61, pts: 8, featured: true },
+  { id: 1299561, team: 'KB Policia e Kosovës', shortName: 'Policia', image: '/teams/policia.webp', p: 4, w: 3, l: 1, scored: 313, conceded: 261, diff: 52, pts: 7 },
+  { id: 1299562, team: 'KB Fushë Kosova', shortName: 'Fushë Kosova', image: '/teams/fushe-kosova.webp', p: 4, w: 2, l: 2, scored: 333, conceded: 345, diff: -12, pts: 6 },
+  { id: 377689, team: 'KB Megasports', shortName: 'Megasports', image: '/teams/megasports.png', p: 4, w: 2, l: 2, scored: 309, conceded: 306, diff: 3, pts: 6 },
+  { id: 378765, team: 'KB Kaçaniku', shortName: 'Kaçaniku', image: '/teams/kacaniku.png', p: 4, w: 1, l: 3, scored: 215, conceded: 260, diff: -45, pts: 5 },
+  { id: 294910, team: 'KB Sfera Skenderai', shortName: 'Sfera', image: '/teams/sfera.png', p: 4, w: 0, l: 4, scored: 192, conceded: 251, diff: -59, pts: 4 },
 ]
 
 export const sources = {
   federation: 'https://www.basketbolli.com/Shooter/Team/350',
-  standings: 'https://kosovo.basketball/Results?leagueId=155',
+  standings: 'https://www.sofascore.com/basketball/tournament/kosovo/liga-e-dyte/39242#id:106709',
   instagram: 'https://www.instagram.com/kb.asprishtina/'
 }
