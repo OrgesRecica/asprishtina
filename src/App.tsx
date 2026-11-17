@@ -15,7 +15,7 @@ function Header({ page, navigate, theme, setTheme }: { page: Page; navigate: (pa
   return <header className="site-header">
     <a className="brand-link" href="/" aria-label="AS Prishtina — Ballina" onClick={event => { event.preventDefault(); navigate('home', '/'); setOpen(false) }}><Mark /></a>
     <button className="menu-button" aria-label={open ? 'Mbyll menynë' : 'Hap menynë'} aria-expanded={open} onClick={() => setOpen(value => !value)}>{open ? <X /> : <Menu />}</button>
-    <nav className={open ? 'open' : ''} aria-label="Navigimi kryesor">{nav.map(([id, label, path, index]) => <a key={id} href={path} className={page === id ? 'active' : ''} onClick={event => { event.preventDefault(); navigate(id, path); setOpen(false) }}><small>{index}</small><span>{label}</span></a>)}</nav>
+    <nav id="primary-navigation" className={open ? 'open' : ''} aria-label="Navigimi kryesor">{nav.map(([id, label, path]) => <a key={id} href={path} className={page === id ? 'active' : ''} aria-current={page === id ? 'page' : undefined} onClick={event => { event.preventDefault(); navigate(id, path); setOpen(false) }}><span>{label}</span><ArrowRight className="nav-arrow" aria-hidden="true" /></a>)}</nav>
     <div className="header-tools"><div className="theme-switch" role="group" aria-label="Pamja e faqes"><button className={theme === 'vendas' ? 'selected' : ''} aria-pressed={theme === 'vendas'} onClick={() => setTheme('vendas')}>Vendas</button><button className={theme === 'mysafir' ? 'selected' : ''} aria-pressed={theme === 'mysafir'} onClick={() => setTheme('mysafir')}>Mysafir</button></div><a className="instagram" href={sources.instagram} target="_blank" rel="noreferrer" aria-label="AS Prishtina në Instagram"><Camera /></a></div>
   </header>
 }
