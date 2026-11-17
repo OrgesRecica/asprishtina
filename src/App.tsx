@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, CalendarDays, Camera, ChevronDown, MapPin, Menu, RotateCcw, Target, X } from 'lucide-react'
 import { matches, players, sources, standings, type Match } from './data'
 
-type Page = 'home' | 'standings' | 'roster' | 'matches' | 'gallery'
+type Page = 'home' | 'standings' | 'roster' | 'matches' | 'gallery' | 'sponsors'
 type Theme = 'vendas' | 'mysafir'
-const routes: Record<string, Page> = { '/': 'home', '/standings': 'standings', '/roster': 'roster', '/matches': 'matches', '/gallery': 'gallery' }
-const nav: [Page, string, string, string][] = [['home', 'Ballina', '/', '01'], ['standings', 'Renditja', '/standings', '02'], ['roster', 'Ekipi', '/roster', '03'], ['matches', 'Ndeshjet', '/matches', '04'], ['gallery', 'Galeria', '/gallery', '05']]
+const routes: Record<string, Page> = { '/': 'home', '/standings': 'standings', '/roster': 'roster', '/matches': 'matches', '/gallery': 'gallery', '/sponsors': 'sponsors' }
+const nav: [Page, string, string, string][] = [['home', 'Ballina', '/', '01'], ['standings', 'Renditja', '/standings', '02'], ['roster', 'Ekipi', '/roster', '03'], ['matches', 'Ndeshjet', '/matches', '04'], ['gallery', 'Galeria', '/gallery', '05'], ['sponsors', 'Sponsorët', '/sponsors', '06']]
 const getPage = (): Page => routes[window.location.pathname] ?? 'home'
 
 function Mark() { return <span className="mark"><img src="/logo.jpg" alt="" /><span>AS<small>PRISHTINA</small></span></span> }
@@ -73,12 +73,17 @@ function Gallery() {
   return <main><section className="compact-heading"><p className="kicker">MOMENTE NGA KLUBI · 2026/27</p><h1>Galeria <span>jonë</span></h1><p>Fotot lokale të ekipit dhe lojtarëve. Hap një imazh për ta parë më nga afër.</p></section><section className="gallery-section section-pad"><div className="gallery-tools"><span>{shown.length} IMAZHE</span><div className="filters">{([['all','TË GJITHA'],['team','EKIPI'],['players','LOJTARËT']] as const).map(([id,label])=><button key={id} className={filter===id?'active':''} onClick={()=>setFilter(id)} aria-pressed={filter===id}>{label}</button>)}</div><a href={sources.instagram} target="_blank" rel="noreferrer">Instagram zyrtar ↗</a></div><div className="gallery-grid">{shown.map(image=><button className="gallery-tile" key={image.src} onClick={()=>setActive(image.src)}><img src={image.src} alt={image.name}/><span>{image.name}<small>HAP IMAZHIN ↗</small></span></button>)}</div></section>{active&&<div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Pamje e imazhit" onClick={()=>setActive(null)}><button aria-label="Mbyll" onClick={()=>setActive(null)}>×</button><img src={active} alt="AS Prishtina"/></div>}</main>
 }
 
+function Sponsors() {
+  const sponsors=[{name:'CHOP',image:'/sponsors/chop.png',type:'PARTNER ZYRTAR'},{name:'Praxis Physiotherapy Center',image:'/sponsors/praxis.png',type:'PARTNER I EKIPIT'},{name:'Five & Co.',image:'/sponsors/fine-and-co.png',type:'PARTNER I EKIPIT'}]
+  return <main><section className="compact-heading"><p className="kicker">PARTNERËT TANË · 2026/27</p><h1>Mbështetje që<br/><span>na çon përpara.</span></h1><p>Suksesi i klubit ndërtohet bashkë. Faleminderit sponsorëve që qëndrojnë pranë AS Prishtinës.</p></section><section className="sponsors-page section-pad"><div className="sponsors-intro"><span>01 / PARTNERËT E KLUBIT</span><p>Një ekip. Një qytet. Partnerë që besojnë në rrugëtimin tonë.</p></div><div className="sponsor-grid">{sponsors.map((sponsor,index)=><article className={`sponsor-card sponsor-${index+1}`} key={sponsor.name}><span className="sponsor-index">0{index+1}</span><div className="sponsor-logo"><img src={sponsor.image} alt={`${sponsor.name} logo`} /></div><div className="sponsor-caption"><small>{sponsor.type}</small><h2>{sponsor.name}</h2></div></article>)}</div><p className="sponsors-thanks">Faleminderit për mbështetjen.<br/><span>Na shohim në parket.</span></p></section></main>
+}
+
 export function App() {
   const [page, setPage] = useState<Page>(getPage), [theme, setTheme] = useState<Theme>(() => window.localStorage.getItem('asprishtina-theme') === 'mysafir' ? 'mysafir' : 'vendas')
   const navigate = (next: Page, path: string) => { window.history.pushState({}, '', path); setPage(next); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   useEffect(() => { document.documentElement.dataset.theme = theme; window.localStorage.setItem('asprishtina-theme', theme) }, [theme])
   useEffect(() => { const pop = () => setPage(getPage()); addEventListener('popstate', pop); return () => removeEventListener('popstate', pop) }, [])
   useEffect(() => { document.title = `${nav.find(item => item[0] === page)?.[1]} — KB AS Prishtina`; const observer = new IntersectionObserver(entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('in-view')), { threshold: .1 }); document.querySelectorAll('.reveal').forEach(element => observer.observe(element)); return () => observer.disconnect() }, [page])
-  const content = useMemo(() => page === 'home' ? <Home go={navigate} /> : page === 'standings' ? <Standings /> : page === 'roster' ? <Roster /> : page === 'gallery' ? <Gallery /> : <Matches />, [page])
+  const content = useMemo(() => page === 'home' ? <Home go={navigate} /> : page === 'standings' ? <Standings /> : page === 'roster' ? <Roster /> : page === 'gallery' ? <Gallery /> : page === 'sponsors' ? <Sponsors /> : <Matches />, [page])
   return <div className="app"><Header page={page} navigate={navigate} theme={theme} setTheme={setTheme} />{content}<Footer navigate={navigate} /></div>
 }
